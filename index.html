@@ -1,0 +1,286 @@
+
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <title>دیجی‌مارکت | فروشگاه لوازم دیجیتال</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="logo" href="#" onclick="showPage('home');return false">
+      <span class="logo-icon">D</span>
+      دیجی‌مارکت
+    </a>
+
+    <label class="search-box">
+      <span>⌕</span>
+      <input id="searchInput" type="search"
+        placeholder="جست‌وجوی موبایل، لپ‌تاپ و ...">
+    </label>
+
+    <div class="header-actions">
+      <button class="btn btn-outline" onclick="showPage('orders')">
+        سفارش‌های من
+      </button>
+      <button class="btn btn-primary" onclick="showPage('cart')">
+        سبد خرید <span id="cartCount">۰</span>
+      </button>
+    </div>
+  </header>
+
+  <nav class="nav">
+    <button onclick="showPage('home')">صفحه اصلی</button>
+    <button onclick="filterCategory('موبایل')">موبایل</button>
+    <button onclick="filterCategory('لپ‌تاپ')">لپ‌تاپ</button>
+    <button onclick="filterCategory('لوازم جانبی')">لوازم جانبی</button>
+    <button onclick="showPage('seller')">پنل فروشنده</button>
+    <button onclick="showPage('profile')">پروفایل من</button>
+  </nav>
+
+  <main class="container">
+    <section id="homePage" class="page">
+      <div class="hero">
+        <div>
+          <span class="eyebrow">دنیای فناوری در دستان تو</span>
+          <h1>خرید هوشمندانه،<br>انتخاب مطمئن</h1>
+          <p>محصولات دیجیتال از فروشندگان مختلف، در یک فروشگاه.</p>
+          <button class="btn btn-primary" onclick="scrollToProducts()">
+            مشاهده محصولات
+          </button>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <span class="hero-orbit"></span>
+          <span class="hero-phone">▯</span>
+          <span class="hero-chip">TECH</span>
+        </div>
+      </div>
+
+      <div class="section-heading">
+        <div>
+          <span class="eyebrow">انتخاب کن</span>
+          <h2>دسته‌بندی محصولات</h2>
+        </div>
+      </div>
+
+      <div class="categories">
+        <button class="category-card" onclick="filterCategory('همه')">
+          <span>✦</span> همه محصولات
+        </button>
+        <button class="category-card" onclick="filterCategory('موبایل')">
+          <span>▯</span> موبایل
+        </button>
+        <button class="category-card" onclick="filterCategory('لپ‌تاپ')">
+          <span>▰</span> لپ‌تاپ
+        </button>
+        <button class="category-card" onclick="filterCategory('لوازم جانبی')">
+          <span>◉</span> لوازم جانبی
+        </button>
+      </div>
+
+      <div class="section-heading" id="productsSection">
+        <div>
+          <span class="eyebrow">ویترین فروشگاه</span>
+          <h2 id="productsTitle">محصولات منتخب</h2>
+        </div>
+        <span id="productTotal" class="muted"></span>
+      </div>
+
+      <div id="productGrid" class="product-grid"></div>
+      <p id="emptyProducts" class="empty hidden">
+        محصولی پیدا نشد. عبارت دیگری جست‌وجو کن.
+      </p>
+    </section>
+
+    <section id="detailPage" class="page hidden">
+      <button class="back-button" onclick="showPage('home')">
+        ← بازگشت به فروشگاه
+      </button>
+      <div id="productDetail"></div>
+    </section>
+
+    <section id="sellerPage" class="page hidden">
+      <div class="page-heading">
+        <span class="eyebrow">مدیریت فروشگاه</span>
+        <h1>پنل فروشنده</h1>
+        <p>محصولاتت را مدیریت کن و ظاهر فروشگاهت را تغییر بده.</p>
+      </div>
+
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <span>محصولات من</span>
+          <strong id="sellerProductCount">۰</strong>
+        </div>
+        <div class="stat-card">
+          <span>سفارش‌های دریافتی</span>
+          <strong id="sellerOrderCount">۰</strong>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2 id="productFormTitle">افزودن محصول جدید</h2>
+        <form id="productForm">
+          <input type="hidden" id="editProductId">
+
+          <div class="form-grid">
+            <label>نام محصول
+              <input id="productName" required maxlength="100"
+                placeholder="مثلاً گوشی هوشمند">
+            </label>
+
+            <label>دسته‌بندی
+              <select id="productCategory" required>
+                <option value="موبایل">موبایل</option>
+                <option value="لپ‌تاپ">لپ‌تاپ</option>
+                <option value="لوازم جانبی">لوازم جانبی</option>
+              </select>
+            </label>
+
+            <label>قیمت (تومان)
+              <input id="productPrice" type="number" min="0"
+                step="1000" required placeholder="مثلاً 25000000">
+            </label>
+
+            <label>موجودی
+              <input id="productStock" type="number" min="0"
+                step="1" required value="1">
+            </label>
+
+            <label>نام فروشگاه
+              <input id="productSeller" required maxlength="80"
+                placeholder="مثلاً فروشگاه آریا">
+            </label>
+
+            <label>رنگ محصول
+              <input id="productColor" maxlength="60"
+                placeholder="مشکی، سفید و ...">
+            </label>
+          </div>
+
+          <label class="field-label">توضیحات و مشخصات محصول
+            <textarea id="productDescription" rows="4" maxlength="3000"
+              placeholder="مشخصات فنی، ضمانت و توضیحات محصول"></textarea>
+          </label>
+
+          <label class="field-label">عکس محصول از گالری
+            <input id="productImage" type="file"
+              accept="image/*" multiple>
+            <span class="hint">
+              می‌توانی یک یا چند عکس انتخاب کنی. در این نسخه عکس‌ها
+              روی همین دستگاه ذخیره می‌شوند.
+            </span>
+          </label>
+
+          <div id="imagePreview" class="image-preview"></div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+              ذخیره محصول
+            </button>
+            <button type="button" class="btn btn-outline"
+              onclick="resetProductForm()">
+              پاک کردن فرم
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <h2>ظاهر فروشگاه من</h2>
+        <p class="muted">
+          رنگ موردنظرت را انتخاب کن و نتیجه را در سایت ببین.
+        </p>
+
+        <div class="theme-picker">
+          <label>رنگ اصلی
+            <input id="themeColor" type="color" value="#7257e8">
+          </label>
+          <label>رنگ پس‌زمینه
+            <input id="backgroundColor" type="color" value="#f5f6fb">
+          </label>
+          <button type="button" class="btn btn-primary"
+            onclick="saveTheme()">اعمال رنگ‌ها</button>
+          <button type="button" class="btn btn-outline"
+            onclick="resetTheme()">بازگشت به رنگ اولیه</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>محصولات ثبت‌شده</h2>
+        <div id="sellerProductList"></div>
+      </div>
+    </section>
+
+    <section id="cartPage" class="page hidden">
+      <div class="page-heading">
+        <span class="eyebrow">انتخاب‌های تو</span>
+        <h1>سبد خرید</h1>
+      </div>
+      <div id="cartItems"></div>
+      <div id="cartSummary" class="panel hidden">
+        <div class="summary-line">
+          <span>مجموع قیمت</span>
+          <strong id="cartTotal"></strong>
+        </div>
+        <p class="hint">
+          این نسخه پرداخت آنلاین ندارد؛ سفارش برای هماهنگی با فروشنده ثبت می‌شود.
+        </p>
+        <form id="checkoutForm">
+          <label class="field-label">نام خریدار
+            <input id="buyerName" required maxlength="100"
+              placeholder="نام و نام خانوادگی">
+          </label>
+          <label class="field-label">شماره تماس
+            <input id="buyerPhone" type="tel" required maxlength="25"
+              placeholder="شماره تماس برای هماهنگی">
+          </label>
+          <label class="field-label">نشانی یا توضیحات سفارش
+            <textarea id="buyerAddress" rows="3" maxlength="1000"
+              placeholder="نشانی یا نحوه هماهنگی با فروشنده"></textarea>
+          </label>
+          <button class="btn btn-primary" type="submit">
+            ثبت سفارش برای هماهنگی
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <section id="ordersPage" class="page hidden">
+      <div class="page-heading">
+        <span class="eyebrow">پیگیری خرید</span>
+        <h1>سفارش‌های من</h1>
+        <p>سفارش‌های ثبت‌شده روی همین دستگاه.</p>
+      </div>
+      <div id="orderList"></div>
+    </section>
+
+    <section id="profilePage" class="page hidden">
+      <div class="page-heading">
+        <span class="eyebrow">حساب کاربری</span>
+        <h1>پروفایل من</h1>
+      </div>
+      <div class="panel">
+        <p>
+          در نسخه فعلی، حساب واقعی ایجاد نشده است. برای حفظ حریم خصوصی،
+          اطلاعات حساس را در این نمونه آزمایشی وارد نکن.
+        </p>
+        <button class="btn btn-primary" onclick="showPage('orders')">
+          مشاهده سفارش‌ها
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="logo"><span class="logo-icon">D</span> دیجی‌مارکت</div>
+    <p>فروشگاه چندفروشنده‌ای لوازم دیجیتال</p>
+    <p class="hint">نسخه آزمایشی؛ هنوز به سرور و پایگاه داده متصل نشده است.</p>
+  </footer>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
