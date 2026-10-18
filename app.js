@@ -1,6 +1,23 @@
 
 "use strict";
+const SUPABASE_URL = "https://ajtrzjgymantpqfdpxcn.supabase.co";
+const SUPABASE_KEY = "sb_publishable_SSrwD6c3GPOq66HAEDbsqw_Xi38vBiw";
 
+const supabaseClient = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+supabaseClient
+  .from("products")
+  .select("*")
+  .limit(1)
+  .then(({ data, error }) => {
+    if (error) {
+      console.error("خطای اتصال به محصولات:", error.message);
+    } else {
+      console.log("اتصال به محصولات موفق بود:", data);
+    }
+  });
 /*
   دیجی‌مارکت - نسخه آزمایشی سمت مرورگر
   توجه: این نسخه هنوز حساب کاربری واقعی و سرور ندارد.
